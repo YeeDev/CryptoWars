@@ -9,8 +9,13 @@ public class Mover : MonoBehaviour
     [SerializeField] Transform tankHead = null;
     [SerializeField] float mousePrecision = 0.1f;
     [SerializeField] Transform cannon = null;
+    [SerializeField] GameObject bulletPrefab = null;
+    [SerializeField] Transform muzzle = null;
+    [SerializeField] float bulletSpeed = 5f;
 
     Rigidbody rb;
+
+    //TODO Bullet Pooler
 
     // Start is called before the first frame update
     void Start()
@@ -18,7 +23,15 @@ public class Mover : MonoBehaviour
         rb = GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Rigidbody bullet = Instantiate(bulletPrefab, muzzle.position, cannon.rotation).GetComponent<Rigidbody>();
+            bullet.velocity = cannon.forward * bulletSpeed;
+        }
+    }
+
     void FixedUpdate()
     {
         Vector3 step = transform.forward * moveSpeed * Input.GetAxis("Vertical");
