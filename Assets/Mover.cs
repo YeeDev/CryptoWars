@@ -25,16 +25,17 @@ public class Mover : MonoBehaviour
     [SerializeField] float xSpeed = 1f;
     [SerializeField] float clampPosition = 35f;
 
+
     bool grounded;
     Rigidbody rb;
 
     //TODO Bullet Pooler
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
         rb = GetComponent<Rigidbody>();
     }
+
 
     private void Update()
     {
@@ -74,9 +75,14 @@ public class Mover : MonoBehaviour
 
         yRotation += Input.GetAxis("Mouse X") * ySpeed;
         transform.eulerAngles = new Vector3(0, yRotation, 0);
-        xRotation += Input.GetAxis("Mouse Y") * xSpeed;
-        xRotation = Mathf.Clamp(xRotation, -clampPosition, clampPosition);
-        cannon.eulerAngles = new Vector3(xRotation, 0, 0) + transform.eulerAngles;
+
+        Vector3 mouseRealWorldPosition = Input.mousePosition;
+        mouseRealWorldPosition.z = 10;
+
+        Vector2 worldScreen = Camera.main.transform.position - Camera.main.ScreenToWorldPoint(mouseRealWorldPosition);
+        xRotation += worldScreen.y * xSpeed;
+        Debug.Log(xRotation);
+        cannon.eulerAngles = (new Vector3(-xRotation, 0, 0) + transform.eulerAngles) - Vector3.right * cameraPivot.position.y;
         cameraPivot.eulerAngles = cannon.eulerAngles;
     }
 
