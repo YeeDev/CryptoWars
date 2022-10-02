@@ -4,15 +4,23 @@ using UnityEngine;
 
 public class Mover : MonoBehaviour
 {
+    [Header("Movement Related")] //TODO Refactor this mess
     [SerializeField] float moveSpeed = 0.2f;
     [SerializeField] float rotationSpeed = 1f;
+    [Header("Shoot Related")]
     [SerializeField] Transform tankHead = null;
     [SerializeField] float mousePrecision = 0.1f;
     [SerializeField] Transform cannon = null;
     [SerializeField] GameObject bulletPrefab = null;
     [SerializeField] Transform muzzle = null;
     [SerializeField] float bulletSpeed = 5f;
+    [Header("Jump Related")]
+    [SerializeField] float jumpForce = 50f;
+    [SerializeField] Transform groundChecker = null;
+    [SerializeField] float checkerRadius = 0.1f;
+    [SerializeField] LayerMask groundMask = 0;
 
+    bool grounded;
     Rigidbody rb;
 
     //TODO Bullet Pooler
@@ -30,10 +38,25 @@ public class Mover : MonoBehaviour
             Rigidbody bullet = Instantiate(bulletPrefab, muzzle.position, cannon.rotation).GetComponent<Rigidbody>();
             bullet.velocity = cannon.forward * bulletSpeed;
         }
+
+        if (Input.GetKeyDown(KeyCode.Space) && grounded)
+        {
+            Vector3 jumpVector = rb.velocity;
+            jumpVector.y += jumpForce;
+            rb.velocity = jumpVector;
+        }
+        else if (Input.GetKeyUp(KeyCode.Space) && rb.velocity.y > 0)
+        {
+            Vector3 haltJumpVector = rb.velocity;
+            haltJumpVector.y *= 0.5f;
+            rb.velocity = haltJumpVector;
+        }
     }
 
     void FixedUpdate()
     {
+        grounded = Physics.CheckSphere(groundChecker.position, checkerRadius, groundMask);
+        
         Vector3 step = transform.forward * moveSpeed * Input.GetAxis("Vertical");
         rb.MovePosition(transform.position + step);
 
@@ -45,5 +68,11 @@ public class Mover : MonoBehaviour
         cannon.LookAt(mouseCursorPoint, Vector3.up);
         mouseCursorPoint.y = tankHead.position.y;
         tankHead.LookAt(mouseCursorPoint, Vector3.up);
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawWireSphere(groundChecker.position, checkerRadius);
     }
 }
