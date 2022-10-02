@@ -24,6 +24,7 @@ public class Mover : MonoBehaviour
     [SerializeField] float ySpeed = 1f;
     [SerializeField] float xSpeed = 1f;
     [SerializeField] float clampPosition = 35f;
+    [SerializeField] float boundingBoxSize = 1f;
 
 
     bool grounded;
@@ -34,6 +35,7 @@ public class Mover : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
 
@@ -76,12 +78,7 @@ public class Mover : MonoBehaviour
         yRotation += Input.GetAxis("Mouse X") * ySpeed;
         transform.eulerAngles = new Vector3(0, yRotation, 0);
 
-        Vector3 mouseRealWorldPosition = Input.mousePosition;
-        mouseRealWorldPosition.z = 10;
-
-        Vector2 worldScreen = Camera.main.transform.position - Camera.main.ScreenToWorldPoint(mouseRealWorldPosition);
-        xRotation += worldScreen.y * xSpeed;
-        Debug.Log(xRotation);
+        xRotation += Input.GetAxis("Mouse Y") * xSpeed;
         cannon.eulerAngles = (new Vector3(-xRotation, 0, 0) + transform.eulerAngles) - Vector3.right * cameraPivot.position.y;
         cameraPivot.eulerAngles = cannon.eulerAngles;
     }
