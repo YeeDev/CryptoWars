@@ -65,7 +65,9 @@ public class Mover : MonoBehaviour
 
         Vector3 mouseCursorPoint = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y,
     -transform.forward.z - -Camera.main.transform.forward.z + mousePrecision));
+
         cannon.LookAt(mouseCursorPoint, Vector3.up);
+
         mouseCursorPoint.y = tankHead.position.y;
         tankHead.LookAt(mouseCursorPoint, Vector3.up);
     }
