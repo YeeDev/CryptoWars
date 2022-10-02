@@ -19,6 +19,11 @@ public class Mover : MonoBehaviour
     [SerializeField] Transform groundChecker = null;
     [SerializeField] float checkerRadius = 0.1f;
     [SerializeField] LayerMask groundMask = 0;
+    [Header("CameraRelated")]
+    [SerializeField] Transform cameraPivot = null;
+    [SerializeField] float ySpeed = 1f;
+    [SerializeField] float xSpeed = 1f;
+    [SerializeField] float clampPosition = 35f;
 
     bool grounded;
     Rigidbody rb;
@@ -52,24 +57,27 @@ public class Mover : MonoBehaviour
             rb.velocity = haltJumpVector;
         }
     }
-
+    float yRotation;
+    float xRotation;
+    //TODO Rotate Camera instead of everything else
     void FixedUpdate()
     {
         grounded = Physics.CheckSphere(groundChecker.position, checkerRadius, groundMask);
-        
-        Vector3 step = transform.forward * moveSpeed * Input.GetAxis("Vertical");
-        rb.MovePosition(transform.position + step);
 
         Quaternion rotateTo = Quaternion.Euler(transform.rotation.eulerAngles + (transform.up * Input.GetAxis("Horizontal")));
         transform.rotation = Quaternion.RotateTowards(transform.rotation, rotateTo, rotationSpeed);
 
-        Vector3 mouseCursorPoint = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y,
-    -transform.forward.z - -Camera.main.transform.forward.z + mousePrecision));
+        Vector3 step = transform.forward * moveSpeed * Input.GetAxis("Vertical");
+        step += transform.right * moveSpeed * Input.GetAxis("Horizontal");
 
-        cannon.LookAt(mouseCursorPoint, Vector3.up);
+        rb.MovePosition(transform.position + step);
 
-        mouseCursorPoint.y = tankHead.position.y;
-        tankHead.LookAt(mouseCursorPoint, Vector3.up);
+        yRotation += Input.GetAxis("Mouse X") * ySpeed;
+        transform.eulerAngles = new Vector3(0, yRotation, 0);
+        xRotation += Input.GetAxis("Mouse Y") * xSpeed;
+        xRotation = Mathf.Clamp(xRotation, -clampPosition, clampPosition);
+        cannon.eulerAngles = new Vector3(xRotation, 0, 0) + transform.eulerAngles;
+        cameraPivot.eulerAngles = cannon.eulerAngles;
     }
 
     private void OnDrawGizmos()
