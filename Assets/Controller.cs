@@ -1,11 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using CryptoWars.Movement;
-using System;
+using CryptoWars.Attacks;
 
 namespace CryptoWars.Controls
 {
+    [RequireComponent(typeof(Mover))]
+    [RequireComponent(typeof(Shooter))]
     public class Controller : MonoBehaviour
     {
         [SerializeField] Transform groundChecker = null;
@@ -14,10 +14,13 @@ namespace CryptoWars.Controls
 
         bool grounded; //TODO use this for hovering
         Mover mover;
+        Shooter shooter;
 
         private void Awake()
         {
             mover = GetComponent<Mover>();
+            shooter = GetComponent<Shooter>();
+
             Cursor.lockState = CursorLockMode.Locked;
         }
 
@@ -40,11 +43,8 @@ namespace CryptoWars.Controls
             else if (Input.GetKeyUp(KeyCode.Space)) { mover.Jump(true); }
         }
 
-        private void ReadShootInput()
-        {
-            Debug.Log("TODO create shooter script");
-        }
-
+        private void ReadShootInput() { if (Input.GetMouseButtonDown(0)) { shooter.Shoot(); } }
+          
         private void FixedUpdate()
         {
             grounded = Physics.CheckSphere(groundChecker.position, checkerRadius, groundMask);

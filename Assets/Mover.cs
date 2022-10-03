@@ -1,41 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace CryptoWars.Movement
 {
+    [RequireComponent(typeof(Rigidbody))]
     public class Mover : MonoBehaviour
     {
         [SerializeField] float moveSpeed = 0.2f;
         [SerializeField] float jumpForce = 50f;
-
-        [Header("Shoot Related")]
+        [SerializeField] float rotateVSpeed = 1f;
+        [SerializeField] float rotateHSpeed = 1f;
         [SerializeField] Transform cannon = null;
-        [SerializeField] GameObject bulletPrefab = null;
-        [SerializeField] Transform muzzle = null;
-        [SerializeField] float bulletSpeed = 5f;
 
         [Header("CameraRelated")]
         [SerializeField] Transform cameraPivot = null;
-        [SerializeField] float rotateVSpeed = 1f;
-        [SerializeField] float rotateHSpeed = 1f;
 
         float vRotation;
         float hRotation;
         Rigidbody rb;
 
-        //TODO Bullet Pooler
-
         private void Awake() { rb = GetComponent<Rigidbody>(); }
-
-        //private void Update()
-        //{
-        //    if (Input.GetMouseButtonDown(0))
-        //    {
-        //        Rigidbody bullet = Instantiate(bulletPrefab, muzzle.position, cannon.rotation).GetComponent<Rigidbody>();
-        //        bullet.velocity = cannon.forward * bulletSpeed;
-        //    }
-        //}
 
         //Called in Controller
         public void Jump(bool haltJump)
