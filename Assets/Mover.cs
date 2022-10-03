@@ -2,90 +2,69 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Mover : MonoBehaviour
+namespace CryptoWars.Movement
 {
-    [Header("Movement Related")] //TODO Refactor this mess
-    [SerializeField] float moveSpeed = 0.2f;
-    [SerializeField] float rotationSpeed = 1f;
-    [Header("Shoot Related")]
-    [SerializeField] Transform tankHead = null;
-    [SerializeField] float mousePrecision = 0.1f;
-    [SerializeField] Transform cannon = null;
-    [SerializeField] GameObject bulletPrefab = null;
-    [SerializeField] Transform muzzle = null;
-    [SerializeField] float bulletSpeed = 5f;
-    [Header("Jump Related")]
-    [SerializeField] float jumpForce = 50f;
-    [SerializeField] Transform groundChecker = null;
-    [SerializeField] float checkerRadius = 0.1f;
-    [SerializeField] LayerMask groundMask = 0;
-    [Header("CameraRelated")]
-    [SerializeField] Transform cameraPivot = null;
-    [SerializeField] float ySpeed = 1f;
-    [SerializeField] float xSpeed = 1f;
-    [SerializeField] float clampPosition = 35f;
-    [SerializeField] float boundingBoxSize = 1f;
-
-
-    bool grounded;
-    Rigidbody rb;
-
-    //TODO Bullet Pooler
-
-    private void Awake()
+    public class Mover : MonoBehaviour
     {
-        rb = GetComponent<Rigidbody>();
-        Cursor.lockState = CursorLockMode.Locked;
-    }
+        [SerializeField] float moveSpeed = 0.2f;
+        [SerializeField] float jumpForce = 50f;
 
+        [Header("Shoot Related")]
+        [SerializeField] Transform cannon = null;
+        [SerializeField] GameObject bulletPrefab = null;
+        [SerializeField] Transform muzzle = null;
+        [SerializeField] float bulletSpeed = 5f;
 
-    private void Update()
-    {
-        if (Input.GetMouseButtonDown(0))
+        [Header("CameraRelated")]
+        [SerializeField] Transform cameraPivot = null;
+        [SerializeField] float rotateVSpeed = 1f;
+        [SerializeField] float rotateHSpeed = 1f;
+
+        float vRotation;
+        float hRotation;
+        Rigidbody rb;
+
+        //TODO Bullet Pooler
+
+        private void Awake() { rb = GetComponent<Rigidbody>(); }
+
+        //private void Update()
+        //{
+        //    if (Input.GetMouseButtonDown(0))
+        //    {
+        //        Rigidbody bullet = Instantiate(bulletPrefab, muzzle.position, cannon.rotation).GetComponent<Rigidbody>();
+        //        bullet.velocity = cannon.forward * bulletSpeed;
+        //    }
+        //}
+
+        //Called in Controller
+        public void Jump(bool haltJump)
         {
-            Rigidbody bullet = Instantiate(bulletPrefab, muzzle.position, cannon.rotation).GetComponent<Rigidbody>();
-            bullet.velocity = cannon.forward * bulletSpeed;
+            if (haltJump && rb.velocity.y > 0) { return; }
+
+            Vector3 jumpSpeed = rb.velocity;
+            jumpSpeed.y = haltJump ? jumpSpeed.y * 0.5f : jumpSpeed.y + jumpForce;
+            rb.velocity = jumpSpeed;
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && grounded)
+        //Called in Controller
+        public void Move(float xAxis, float yAxis)
         {
-            Vector3 jumpVector = rb.velocity;
-            jumpVector.y += jumpForce;
-            rb.velocity = jumpVector;
+            Vector3 step = transform.forward * moveSpeed * xAxis;
+            step += transform.right * moveSpeed * yAxis;
+
+            rb.MovePosition(transform.position + step);
         }
-        else if (Input.GetKeyUp(KeyCode.Space) && rb.velocity.y > 0)
+
+        //Called in Controller
+        public void Rotate(float vAxis, float hAxis)
         {
-            Vector3 haltJumpVector = rb.velocity;
-            haltJumpVector.y *= 0.5f;
-            rb.velocity = haltJumpVector;
+            vRotation += vAxis * rotateVSpeed;
+            transform.eulerAngles = new Vector3(0, vRotation, 0);
+
+            hRotation += hAxis * rotateHSpeed;
+            cannon.eulerAngles = (new Vector3(hRotation, 0, 0) + transform.eulerAngles) - Vector3.right * cameraPivot.position.y;
+            cameraPivot.eulerAngles = cannon.eulerAngles; //TODO in his own script
         }
-    }
-    float yRotation;
-    float xRotation;
-    //TODO Rotate Camera instead of everything else
-    void FixedUpdate()
-    {
-        grounded = Physics.CheckSphere(groundChecker.position, checkerRadius, groundMask);
-
-        Quaternion rotateTo = Quaternion.Euler(transform.rotation.eulerAngles + (transform.up * Input.GetAxis("Horizontal")));
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, rotateTo, rotationSpeed);
-
-        Vector3 step = transform.forward * moveSpeed * Input.GetAxis("Vertical");
-        step += transform.right * moveSpeed * Input.GetAxis("Horizontal");
-
-        rb.MovePosition(transform.position + step);
-
-        yRotation += Input.GetAxis("Mouse X") * ySpeed;
-        transform.eulerAngles = new Vector3(0, yRotation, 0);
-
-        xRotation += Input.GetAxis("Mouse Y") * xSpeed;
-        cannon.eulerAngles = (new Vector3(-xRotation, 0, 0) + transform.eulerAngles) - Vector3.right * cameraPivot.position.y;
-        cameraPivot.eulerAngles = cannon.eulerAngles;
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.magenta;
-        Gizmos.DrawWireSphere(groundChecker.position, checkerRadius);
     }
 }
