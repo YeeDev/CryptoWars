@@ -10,17 +10,16 @@ namespace CryptoWars.Movement
         [SerializeField] float jumpForce = 50f;
         [SerializeField] float rotateVSpeed = 1f;
         [SerializeField] float rotateHSpeed = 1f;
-        [SerializeField] float hoveringMaxTime = 5f; //TODO Grab it from hardware piece Fuel
+        [Tooltip("1 fuel unit = 1 second.")][SerializeField] float maxFuel = 5f; //TODO Grab it from hardware piece Fuel
         [SerializeField] Transform cannon = null;
-        [SerializeField] RectTransform fuelBar = null;
         
         bool isHovering;
         float vRotation;
         float hRotation;
-        float hoveringTime;
-        float fuelBarMaxXSize;
-        Transform cameraPivot;
+        float currentFuel;
         Rigidbody rb;
+        Transform cameraPivot;
+        UIUpdater uIUpdater;
 
         //Used in Controller
         public bool IsHovering { get => isHovering; }
@@ -29,9 +28,9 @@ namespace CryptoWars.Movement
         {
             rb = GetComponent<Rigidbody>();
             cameraPivot = Camera.main.transform.parent.transform;
+            uIUpdater = FindObjectOfType<UIUpdater>();
 
-            hoveringTime = hoveringMaxTime;
-            fuelBarMaxXSize = fuelBar.sizeDelta.x;
+            currentFuel = maxFuel;
         }
 
         //Called in Controller
@@ -67,17 +66,15 @@ namespace CryptoWars.Movement
         //Called in Controller
         public IEnumerator Hover()
         {
-            if (hoveringTime <= Mathf.Epsilon) { yield break; }
+            if (currentFuel <= Mathf.Epsilon) { yield break; }
 
             isHovering = true;
             rb.constraints = RigidbodyConstraints.FreezePositionY ^ RigidbodyConstraints.FreezeRotation;
 
-            while (hoveringTime > Mathf.Epsilon && isHovering)
+            while (currentFuel > Mathf.Epsilon && isHovering)
             {
-                hoveringTime -= Time.deltaTime;
-                Vector2 fuelBarSize = fuelBar.sizeDelta;
-                fuelBarSize.x = (hoveringTime * fuelBarMaxXSize) / hoveringMaxTime;
-                fuelBar.sizeDelta = fuelBarSize;
+                currentFuel -= Time.deltaTime;
+                uIUpdater.UpdateFuelBar(currentFuel, maxFuel);
 
                 yield return new WaitForEndOfFrame();
             }
@@ -91,10 +88,10 @@ namespace CryptoWars.Movement
         //Called in Controller
         public void ResetHoveringTimer()
         {
-            hoveringTime = Mathf.Clamp(hoveringTime + Time.deltaTime, 0, hoveringMaxTime);
-            Vector2 fuelBarSize = fuelBar.sizeDelta; //TODO Refacor this
-            fuelBarSize.x = (hoveringTime * fuelBarMaxXSize) / hoveringMaxTime;
-            fuelBar.sizeDelta = fuelBarSize;
+            if (isHovering) { return; }
+
+            currentFuel = Mathf.Clamp(currentFuel + Time.deltaTime, 0, maxFuel);
+            uIUpdater.UpdateFuelBar(currentFuel, maxFuel);
         } 
     }
 }
