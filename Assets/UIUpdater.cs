@@ -12,7 +12,11 @@ public class UIUpdater : MonoBehaviour
 
     float fuelBarMaxXSize;
 
-    private void Awake() { fuelBarMaxXSize = fuelBar.sizeDelta.x; }
+    private void Awake()
+    {
+        fuelBarMaxXSize = fuelBar.sizeDelta.x;
+        UpdateCurrency(0);
+    }
 
     public void UpdateCurrency(int currencyToAdd)
     {
