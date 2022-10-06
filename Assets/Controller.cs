@@ -1,7 +1,7 @@
 using UnityEngine;
 using CryptoWars.Movement;
 using CryptoWars.Attacks;
-
+using CryptoWars.CustomPhysics;
 
 namespace CryptoWars.Controls
 {
@@ -16,11 +16,14 @@ namespace CryptoWars.Controls
         bool grounded;
         Mover mover;
         Shooter shooter;
+        PhysicsApplier physicsApplier;
 
         private void Awake()
         {
             mover = GetComponent<Mover>();
             shooter = GetComponent<Shooter>();
+            physicsApplier = GetComponent<PhysicsApplier>();
+            physicsApplier.SetMover = mover;
 
             Cursor.lockState = CursorLockMode.Locked;
         }
@@ -30,6 +33,7 @@ namespace CryptoWars.Controls
             ReadMoveInput();
             ReadJumpInput();
             ReadShootInput();
+            CheckIfInvertGravity();
         }
 
         private void ReadMoveInput()
@@ -53,6 +57,13 @@ namespace CryptoWars.Controls
             grounded = Physics.CheckSphere(groundChecker.position, checkerRadius, groundMask);
 
             if (grounded) { mover.ResetHoveringTimer(); }
+
+            physicsApplier.ApplyGravity();
+        }
+
+        private void CheckIfInvertGravity()
+        {
+            
         }
 
         private void OnDrawGizmos()

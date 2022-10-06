@@ -22,6 +22,7 @@ namespace CryptoWars.Movement
         UIUpdater uIUpdater;
 
         //Used in Controller
+        public Rigidbody GetRigidbody { get => rb; }
         public bool IsHovering { get => isHovering; }
 
         private void Awake()
@@ -92,6 +93,6 @@ namespace CryptoWars.Movement
 
             currentFuel = Mathf.Clamp(currentFuel + Time.deltaTime, 0, maxFuel);
             uIUpdater.UpdateFuelBar(currentFuel, maxFuel);
-        } 
+        }
     }
 }
