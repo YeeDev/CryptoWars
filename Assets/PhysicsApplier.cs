@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using CryptoWars.Movement;
 
 namespace CryptoWars.CustomPhysics
 {
@@ -9,13 +8,24 @@ namespace CryptoWars.CustomPhysics
     {
         [SerializeField] float gravityForce = -20;
 
-        Mover mover;
+        float gravityThreshold;
+        Rigidbody rb;
 
-        public Mover SetMover { set => mover = value; }
+        public float GravityDirection { get => Mathf.Sign(gravityForce) * -1; }
+        public Rigidbody RB { get => rb; }
 
-        public void ApplyGravity()
+        private void Awake()
         {
-            mover.GetRigidbody.AddForce(Vector3.up * gravityForce);
+            gravityThreshold = GameObject.FindGameObjectWithTag("Terrain").transform.position.y;
+            rb = GetComponent<Rigidbody>();
+        }
+
+        public void ApplyGravity() { rb.AddForce(Vector3.up * gravityForce); }
+
+        public void CheckIfInvertGravity()
+        {
+            if (transform.position.y > gravityThreshold && gravityForce < 0) { gravityForce = -gravityForce; }
+            else if (transform.position.y < gravityThreshold && gravityForce > 0) { gravityForce *= -1; }
         }
     }
 }

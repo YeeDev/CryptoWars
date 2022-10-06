@@ -23,7 +23,8 @@ namespace CryptoWars.Controls
             mover = GetComponent<Mover>();
             shooter = GetComponent<Shooter>();
             physicsApplier = GetComponent<PhysicsApplier>();
-            physicsApplier.SetMover = mover;
+
+            mover.SetPhysicsApplier = physicsApplier;
 
             Cursor.lockState = CursorLockMode.Locked;
         }
@@ -33,7 +34,7 @@ namespace CryptoWars.Controls
             ReadMoveInput();
             ReadJumpInput();
             ReadShootInput();
-            CheckIfInvertGravity();
+            physicsApplier.CheckIfInvertGravity();
         }
 
         private void ReadMoveInput()
@@ -59,11 +60,6 @@ namespace CryptoWars.Controls
             if (grounded) { mover.ResetHoveringTimer(); }
 
             physicsApplier.ApplyGravity();
-        }
-
-        private void CheckIfInvertGravity()
-        {
-            
         }
 
         private void OnDrawGizmos()

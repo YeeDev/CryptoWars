@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using CryptoWars.CustomPhysics;
 
 namespace CryptoWars.Movement
 {
@@ -17,17 +18,17 @@ namespace CryptoWars.Movement
         float vRotation;
         float hRotation;
         float currentFuel;
-        Rigidbody rb;
         Transform cameraPivot;
+        PhysicsApplier physics;
         UIUpdater uIUpdater;
 
         //Used in Controller
-        public Rigidbody GetRigidbody { get => rb; }
         public bool IsHovering { get => isHovering; }
+
+        public PhysicsApplier SetPhysicsApplier { set => physics = value; }
 
         private void Awake()
         {
-            rb = GetComponent<Rigidbody>();
             cameraPivot = Camera.main.transform.parent.transform;
             uIUpdater = FindObjectOfType<UIUpdater>();
 
@@ -37,11 +38,14 @@ namespace CryptoWars.Movement
         //Called in Controller
         public void Jump(bool haltJump = false)
         {
-            if (haltJump && rb.velocity.y < 0) { return; }
-
-            Vector3 jumpSpeed = rb.velocity;
-            jumpSpeed.y = haltJump ? jumpSpeed.y * 0.5f : jumpSpeed.y + jumpForce;
-            rb.velocity = jumpSpeed;
+            if (haltJump && (
+                (physics.RB.velocity.y > 0 && physics.GravityDirection < 0) ||
+                (physics.RB.velocity.y < 0 && physics.GravityDirection > 0)))
+            { return; }
+             
+            Vector3 jumpSpeed = physics.RB.velocity;
+            jumpSpeed.y = haltJump ? jumpSpeed.y * 0.5f : (jumpSpeed.y + jumpForce) * physics.GravityDirection;
+            physics.RB.velocity = jumpSpeed;
         }
 
         //Called in Controller
@@ -50,7 +54,7 @@ namespace CryptoWars.Movement
             Vector3 step = transform.forward * moveSpeed * xAxis;
             step += transform.right * moveSpeed * yAxis;
 
-            rb.MovePosition(transform.position + step);
+            physics.RB.MovePosition(transform.position + step);
         }
 
         //Called in Controller
@@ -70,7 +74,7 @@ namespace CryptoWars.Movement
             if (currentFuel <= Mathf.Epsilon) { yield break; }
 
             isHovering = true;
-            rb.constraints = RigidbodyConstraints.FreezePositionY ^ RigidbodyConstraints.FreezeRotation;
+            physics.RB.constraints = RigidbodyConstraints.FreezePositionY ^ RigidbodyConstraints.FreezeRotation;
 
             while (currentFuel > Mathf.Epsilon && isHovering)
             {
@@ -80,7 +84,7 @@ namespace CryptoWars.Movement
                 yield return new WaitForEndOfFrame();
             }
 
-            rb.constraints = RigidbodyConstraints.FreezeRotation;
+            physics.RB.constraints = RigidbodyConstraints.FreezeRotation;
             isHovering = false;
         }
 
