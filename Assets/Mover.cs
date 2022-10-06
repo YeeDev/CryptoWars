@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 namespace CryptoWars.Movement
@@ -9,21 +10,29 @@ namespace CryptoWars.Movement
         [SerializeField] float jumpForce = 50f;
         [SerializeField] float rotateVSpeed = 1f;
         [SerializeField] float rotateHSpeed = 1f;
+        [SerializeField] float hoveringMaxTime = 1f; //TODO Grab it from hardware piece Fuel
         [SerializeField] Transform cannon = null;
 
-        [Header("CameraRelated")]
-        [SerializeField] Transform cameraPivot = null;
-
+        bool isHovering;
         float vRotation;
         float hRotation;
+        float hoveringTime;
+        Transform cameraPivot;
         Rigidbody rb;
 
-        private void Awake() { rb = GetComponent<Rigidbody>(); }
+        //Used in Controller
+        public bool IsHovering { get => isHovering; }
+
+        private void Awake()
+        {
+            rb = GetComponent<Rigidbody>();
+            cameraPivot = Camera.main.transform.parent.transform;
+        }
 
         //Called in Controller
-        public void Jump(bool haltJump)
+        public void Jump(bool haltJump = false)
         {
-            if (haltJump && rb.velocity.y > 0) { return; }
+            if (haltJump && rb.velocity.y < 0) { return; }
 
             Vector3 jumpSpeed = rb.velocity;
             jumpSpeed.y = haltJump ? jumpSpeed.y * 0.5f : jumpSpeed.y + jumpForce;
@@ -49,5 +58,29 @@ namespace CryptoWars.Movement
             cannon.eulerAngles = (new Vector3(hRotation, 0, 0) + transform.eulerAngles) - Vector3.right * cameraPivot.position.y;
             cameraPivot.eulerAngles = cannon.eulerAngles; //TODO in his own script
         }
+
+        //Called in Controller
+        public IEnumerator Hover()
+        {
+            if (hoveringTime >= hoveringMaxTime) { yield break; }
+
+            isHovering = true;
+            rb.constraints = RigidbodyConstraints.FreezePositionY ^ RigidbodyConstraints.FreezeRotation;
+
+            while (hoveringTime < hoveringMaxTime && isHovering)
+            {
+                hoveringTime += Time.deltaTime;
+                Debug.Log(hoveringTime);
+                yield return new WaitForEndOfFrame();
+            }
+
+            rb.constraints = RigidbodyConstraints.FreezeRotation;
+            isHovering = false;
+        }
+
+        //Called in Controller
+        public void StopHovering() { isHovering = false; }
+        //Called in Controller
+        public void ResetHoveringTimer() { hoveringTime = Mathf.Clamp(hoveringTime - Time.deltaTime, 0, Mathf.Infinity); } 
     }
 }

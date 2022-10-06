@@ -1,6 +1,7 @@
 using UnityEngine;
 using CryptoWars.Movement;
 using CryptoWars.Attacks;
+using System;
 
 namespace CryptoWars.Controls
 {
@@ -12,7 +13,7 @@ namespace CryptoWars.Controls
         [SerializeField] float checkerRadius = 0.1f;
         [SerializeField] LayerMask groundMask = 0;
 
-        bool grounded; //TODO use this for hovering
+        bool grounded;
         Mover mover;
         Shooter shooter;
 
@@ -39,15 +40,19 @@ namespace CryptoWars.Controls
 
         private void ReadJumpInput()
         {
-            if (Input.GetKeyDown(KeyCode.Space)) { mover.Jump(false); }
-            else if (Input.GetKeyUp(KeyCode.Space)) { mover.Jump(true); }
+            if (Input.GetKeyDown(KeyCode.Space) && !mover.IsHovering && !grounded) { StartCoroutine(mover.Hover()); }
+            else if (Input.GetKeyUp(KeyCode.Space) && mover.IsHovering) { mover.StopHovering(); }
+            else if (Input.GetKeyDown(KeyCode.Space) && grounded) { mover.Jump(); }
+            else if (Input.GetKeyUp(KeyCode.Space) && !mover.IsHovering) { mover.Jump(true); }
         }
 
         private void ReadShootInput() { if (Input.GetMouseButtonDown(0)) { shooter.Shoot(); } }
-          
+
         private void FixedUpdate()
         {
             grounded = Physics.CheckSphere(groundChecker.position, checkerRadius, groundMask);
+
+            if (grounded) { mover.ResetHoveringTimer(); }
         }
 
         private void OnDrawGizmos()
