@@ -4,7 +4,8 @@ public class CryptoFile : MonoBehaviour
 {
     [SerializeField] int currencyValue = 5;
     [SerializeField] int health = 5;
-    [SerializeField] float loweredHeightAmount = 0.5f;
+    [SerializeField] float heightChange = 0.5f;
+    [SerializeField] float moveDirectionThreshold = 10;
 
     UIUpdater uIUpdater;
 
@@ -19,7 +20,7 @@ public class CryptoFile : MonoBehaviour
         health -= damage;
 
         Vector3 loweredPosition = transform.position;
-        loweredPosition.y -= loweredHeightAmount;
+        loweredPosition.y += transform.position.y < moveDirectionThreshold ? -heightChange : heightChange;
         transform.position = loweredPosition;
 
         if (health <= 0)
