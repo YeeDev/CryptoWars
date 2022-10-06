@@ -10,13 +10,15 @@ namespace CryptoWars.Movement
         [SerializeField] float jumpForce = 50f;
         [SerializeField] float rotateVSpeed = 1f;
         [SerializeField] float rotateHSpeed = 1f;
-        [SerializeField] float hoveringMaxTime = 1f; //TODO Grab it from hardware piece Fuel
+        [SerializeField] float hoveringMaxTime = 5f; //TODO Grab it from hardware piece Fuel
         [SerializeField] Transform cannon = null;
-
+        [SerializeField] RectTransform fuelBar = null;
+        
         bool isHovering;
         float vRotation;
         float hRotation;
         float hoveringTime;
+        float fuelBarMaxXSize;
         Transform cameraPivot;
         Rigidbody rb;
 
@@ -27,6 +29,9 @@ namespace CryptoWars.Movement
         {
             rb = GetComponent<Rigidbody>();
             cameraPivot = Camera.main.transform.parent.transform;
+
+            hoveringTime = hoveringMaxTime;
+            fuelBarMaxXSize = fuelBar.sizeDelta.x;
         }
 
         //Called in Controller
@@ -62,15 +67,18 @@ namespace CryptoWars.Movement
         //Called in Controller
         public IEnumerator Hover()
         {
-            if (hoveringTime >= hoveringMaxTime) { yield break; }
+            if (hoveringTime <= Mathf.Epsilon) { yield break; }
 
             isHovering = true;
             rb.constraints = RigidbodyConstraints.FreezePositionY ^ RigidbodyConstraints.FreezeRotation;
 
-            while (hoveringTime < hoveringMaxTime && isHovering)
+            while (hoveringTime > Mathf.Epsilon && isHovering)
             {
-                hoveringTime += Time.deltaTime;
-                Debug.Log(hoveringTime);
+                hoveringTime -= Time.deltaTime;
+                Vector2 fuelBarSize = fuelBar.sizeDelta;
+                fuelBarSize.x = (hoveringTime * fuelBarMaxXSize) / hoveringMaxTime;
+                fuelBar.sizeDelta = fuelBarSize;
+
                 yield return new WaitForEndOfFrame();
             }
 
@@ -81,6 +89,12 @@ namespace CryptoWars.Movement
         //Called in Controller
         public void StopHovering() { isHovering = false; }
         //Called in Controller
-        public void ResetHoveringTimer() { hoveringTime = Mathf.Clamp(hoveringTime - Time.deltaTime, 0, Mathf.Infinity); } 
+        public void ResetHoveringTimer()
+        {
+            hoveringTime = Mathf.Clamp(hoveringTime + Time.deltaTime, 0, hoveringMaxTime);
+            Vector2 fuelBarSize = fuelBar.sizeDelta; //TODO Refacor this
+            fuelBarSize.x = (hoveringTime * fuelBarMaxXSize) / hoveringMaxTime;
+            fuelBar.sizeDelta = fuelBarSize;
+        } 
     }
 }
