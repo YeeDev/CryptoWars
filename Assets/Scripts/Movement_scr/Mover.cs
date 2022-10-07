@@ -73,6 +73,7 @@ namespace CryptoWars.Movement
             if (currentFuel <= Mathf.Epsilon) { yield break; }
 
             isHovering = true;
+            physics.RB.constraints = RigidbodyConstraints.FreezeRotation ^ RigidbodyConstraints.FreezePositionY;
 
             while (currentFuel > Mathf.Epsilon && isHovering)
             {
@@ -82,6 +83,7 @@ namespace CryptoWars.Movement
                 yield return new WaitForEndOfFrame();
             }
 
+            physics.RB.constraints = RigidbodyConstraints.FreezeRotation;
             isHovering = false;
         }
 
