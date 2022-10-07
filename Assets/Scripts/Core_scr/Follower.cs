@@ -4,18 +4,22 @@ namespace CryptoWars.Core
 {
     public class Follower : MonoBehaviour
     {
-        //TODO Set this variable on awake, not in inspector
-        [SerializeField] Transform player = null;
+        Transform player;
+        Transform model;
 
         private void Awake()
         {
-
+            player = GameObject.FindGameObjectWithTag("Player").transform;
+            model = player.GetChild(0);
         }
 
-        // Update is called once per frame
         void LateUpdate()
         {
             transform.position = player.position;
+
+            Vector3 followRotation = player.rotation.eulerAngles;
+            followRotation += Vector3.forward * model.rotation.eulerAngles.z;
+            transform.rotation = Quaternion.Euler(followRotation);
         }
     }
 }
