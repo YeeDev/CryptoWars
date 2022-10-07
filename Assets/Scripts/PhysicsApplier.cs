@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace CryptoWars.CustomPhysics
@@ -24,18 +22,8 @@ namespace CryptoWars.CustomPhysics
 
         public void CheckIfInvertGravity() //TODO handle this in animation Child objects
         {
-            if (transform.position.y > gravityThreshold && gravityForce < 0)
-            {
-                gravityForce *= -1;
-                Vector3 currentRotation = transform.rotation.eulerAngles;
-                currentRotation += Vector3.forward * 180;
-                transform.rotation = Quaternion.Euler(currentRotation);
-            }
-            else if (transform.position.y < gravityThreshold && gravityForce > 0) { gravityForce *= -1;
-                Vector3 currentRotation = transform.rotation.eulerAngles;
-                currentRotation += Vector3.forward * 180;
-                transform.rotation = Quaternion.Euler(currentRotation);
-            }
+            if (transform.position.y > gravityThreshold && gravityForce < 0) { gravityForce *= -1; }
+            else if (transform.position.y < gravityThreshold && gravityForce > 0) { gravityForce *= -1; }
         }
     }
 }
