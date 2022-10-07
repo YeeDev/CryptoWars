@@ -8,13 +8,14 @@ namespace CryptoWars.Currency
         [SerializeField] int currencyValue = 5;
         [SerializeField] int health = 5;
         [SerializeField] float heightChange = 0.5f;
-        [SerializeField] float moveDirectionThreshold = 10;
 
+        float moveDirectionThreshold;
         UIUpdater uIUpdater;
 
         private void Awake()
         {
             uIUpdater = FindObjectOfType<UIUpdater>();
+            moveDirectionThreshold = GameObject.FindGameObjectWithTag("Terrain").transform.position.y;
         }
 
         //TODO Refactor this, POSSNewName TakeDamage
