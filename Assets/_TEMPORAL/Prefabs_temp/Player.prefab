@@ -937,6 +937,7 @@ GameObject:
   - component: {fileID: 6181196937043242388}
   - component: {fileID: 6181196937043242371}
   - component: {fileID: 6181196937043242380}
+  - component: {fileID: 7032606448462556592}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1029,6 +1030,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a9b7e2adaa334b27908bb28a4323139, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   moveSpeed: 0.2
   jumpForce: 18
   rotateVSpeed: 5
@@ -1047,6 +1050,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b1aa2b33361a4ae7ae6037b86b44147, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   bulletPrefab: {fileID: 522249296609927612, guid: 68c865187d8e0446786db6f0d0a875d7, type: 3}
   muzzle: {fileID: 6181196936193852989}
   bulletSpeed: 30
@@ -1091,7 +1096,7 @@ MonoBehaviour:
   sceneId: 0
   serverOnly: 0
   visible: 0
-  m_AssetId: 
+  m_AssetId: 4b670922a173e4e8a806323b77cc2093
   hasSpawned: 0
 --- !u!114 &6181196937043242380
 MonoBehaviour:
@@ -1130,6 +1135,44 @@ MonoBehaviour:
   showGizmos: 0
   showOverlay: 0
   overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+--- !u!114 &7032606448462556592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6181196937043242390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 734b48bea0b204338958ee3d885e11f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  clientAuthority: 1
+  sendRate: 30
+  bufferTimeMultiplier: 2
+  bufferSizeLimit: 64
+  catchupNegativeThreshold: -1
+  catchupPositiveThreshold: 1
+  catchupSpeed: 0.009999999776482582
+  slowdownSpeed: 0.009999999776482582
+  driftEmaDuration: 1
+  dynamicAdjustment: 1
+  dynamicAdjustmentTolerance: 1
+  deliveryTimeEmaDuration: 2
+  onlySyncOnChange: 1
+  bufferResetMultiplier: 5
+  positionSensitivity: 0.01
+  rotationSensitivity: 0.01
+  scaleSensitivity: 0.01
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 0
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  target: {fileID: 2056288733553989503}
 --- !u!1 &7063381151362031730
 GameObject:
   m_ObjectHideFlags: 0
