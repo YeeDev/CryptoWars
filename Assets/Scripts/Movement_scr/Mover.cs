@@ -1,3 +1,4 @@
+using Mirror;
 using System.Collections;
 using UnityEngine;
 using CryptoWars.CustomPhysics;
@@ -6,7 +7,7 @@ using CryptoWars.UI;
 namespace CryptoWars.Movement
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class Mover : MonoBehaviour
+    public class Mover : NetworkBehaviour
     {
         [SerializeField] float moveSpeed = 0.2f;
         [SerializeField] float jumpForce = 50f;
@@ -28,7 +29,7 @@ namespace CryptoWars.Movement
 
         public PhysicsApplier SetPhysicsApplier { set => physics = value; }
 
-        private void Awake()
+        public override void OnStartLocalPlayer()
         {
             uIUpdater = FindObjectOfType<UIUpdater>();
 
