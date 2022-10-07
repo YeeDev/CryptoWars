@@ -1,4 +1,5 @@
 using UnityEngine;
+using CryptoWars.UI;
 
 namespace CryptoWars.Currency
 {

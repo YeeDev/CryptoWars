@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using CryptoWars.CustomPhysics;
+using CryptoWars.UI;
 
 namespace CryptoWars.Movement
 {
@@ -11,7 +12,8 @@ namespace CryptoWars.Movement
         [SerializeField] float jumpForce = 50f;
         [SerializeField] float rotateVSpeed = 1f;
         [SerializeField] float rotateHSpeed = 1f;
-        [Tooltip("1 fuel unit = 1 second.")][SerializeField] float maxFuel = 5f; //TODO Grab it from hardware piece Fuel
+        [Tooltip("1 fuel unit = 1 second.")]
+        [SerializeField] float maxFuel = 5f; //TODO Grab it from hardware piece Fuel
         [SerializeField] Transform cannon = null;
         
         bool isHovering;
