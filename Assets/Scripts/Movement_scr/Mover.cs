@@ -20,7 +20,6 @@ namespace CryptoWars.Movement
         float vRotation;
         float hRotation;
         float currentFuel;
-        Transform cameraPivot;
         PhysicsApplier physics;
         UIUpdater uIUpdater;
 
@@ -31,7 +30,6 @@ namespace CryptoWars.Movement
 
         private void Awake()
         {
-            cameraPivot = Camera.main.transform.parent.transform;
             uIUpdater = FindObjectOfType<UIUpdater>();
 
             currentFuel = maxFuel;
@@ -54,7 +52,7 @@ namespace CryptoWars.Movement
         public void Move(float xAxis, float yAxis)
         {
             Vector3 step = transform.forward * moveSpeed * xAxis;
-            step += transform.right * moveSpeed * yAxis;
+            step += transform.right * moveSpeed * yAxis * physics.GravityDirection;
 
             physics.RB.MovePosition(transform.position + step);
         }
@@ -66,7 +64,7 @@ namespace CryptoWars.Movement
             transform.eulerAngles = new Vector3(0, vRotation, 0);
 
             hRotation += hAxis * rotateHSpeed * physics.GravityDirection;
-            cannon.eulerAngles = (new Vector3(hRotation, 0, 0) + transform.eulerAngles) - Vector3.right * cameraPivot.position.y;
+            cannon.eulerAngles = new Vector3(hRotation, 0, 0) + transform.eulerAngles;
         }
 
         //Called in Controller
@@ -75,7 +73,6 @@ namespace CryptoWars.Movement
             if (currentFuel <= Mathf.Epsilon) { yield break; }
 
             isHovering = true;
-            physics.RB.constraints = RigidbodyConstraints.FreezePositionY ^ RigidbodyConstraints.FreezeRotation;
 
             while (currentFuel > Mathf.Epsilon && isHovering)
             {
@@ -85,7 +82,6 @@ namespace CryptoWars.Movement
                 yield return new WaitForEndOfFrame();
             }
 
-            physics.RB.constraints = RigidbodyConstraints.FreezeRotation;
             isHovering = false;
         }
 
