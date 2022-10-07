@@ -62,12 +62,11 @@ namespace CryptoWars.Movement
         //Called in Controller
         public void Rotate(float vAxis, float hAxis)
         {
-            vRotation += vAxis * rotateVSpeed;
+            vRotation += vAxis * rotateVSpeed * physics.GravityDirection;
             transform.eulerAngles = new Vector3(0, vRotation, 0);
 
-            hRotation += hAxis * rotateHSpeed;
+            hRotation += hAxis * rotateHSpeed * physics.GravityDirection;
             cannon.eulerAngles = (new Vector3(hRotation, 0, 0) + transform.eulerAngles) - Vector3.right * cameraPivot.position.y;
-            cameraPivot.eulerAngles = cannon.eulerAngles; //TODO in his own script
         }
 
         //Called in Controller
