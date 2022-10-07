@@ -4,6 +4,8 @@ namespace CryptoWars.Core
 {
     public class Follower : MonoBehaviour
     {
+        [SerializeField] Transform cannon = null;
+
         Transform player;
         Transform model;
 
@@ -19,6 +21,7 @@ namespace CryptoWars.Core
 
             Vector3 followRotation = player.rotation.eulerAngles;
             followRotation += Vector3.forward * model.rotation.eulerAngles.z;
+            followRotation += Vector3.right * cannon.rotation.eulerAngles.x;
             transform.rotation = Quaternion.Euler(followRotation);
         }
     }
