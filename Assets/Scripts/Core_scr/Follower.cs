@@ -4,23 +4,25 @@ namespace CryptoWars.Core
 {
     public class Follower : MonoBehaviour
     {
-        [SerializeField] Transform cannon = null;
-
         Transform player;
-        Transform model;
+        Transform mesh;
+        Transform cannon;
 
-        private void Awake()
+        public void SetCamera(Transform player, Transform mesh, Transform cannon)
         {
-            player = GameObject.FindGameObjectWithTag("Player").transform;
-            model = player.GetChild(0);
+            this.player = player;
+            this.mesh = mesh;
+            this.cannon = cannon;
         }
 
         void LateUpdate()
         {
+            if (player == null) { return; }
+
             transform.position = player.position;
 
             Vector3 followRotation = player.rotation.eulerAngles;
-            followRotation += Vector3.forward * model.rotation.eulerAngles.z;
+            followRotation += Vector3.forward * mesh.rotation.eulerAngles.z;
             followRotation += Vector3.right * cannon.rotation.eulerAngles.x;
             transform.rotation = Quaternion.Euler(followRotation);
         }
