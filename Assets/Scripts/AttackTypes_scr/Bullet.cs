@@ -9,6 +9,7 @@ namespace CryptoWars.AttackTypes
         [SerializeField] int damage = 1;
         [SerializeField] float bulletspeed = 40f;
         [SerializeField] Rigidbody rb = null;
+        [SerializeField] GameObject explosionParticles = null;
 
         private void Start()
         {
@@ -18,11 +19,13 @@ namespace CryptoWars.AttackTypes
         [ServerCallback]
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Currency"))
+            if (!other.CompareTag("Limit"))
             {
-                other.GetComponent<CryptoFile>().ReduceHealth(damage);
-                DestroySelf();
+                GameObject particles = Instantiate(explosionParticles, transform.position, Quaternion.identity);
+                NetworkServer.Spawn(particles);
             }
+            if (other.CompareTag("Currency")) { other.GetComponent<CryptoFile>().ReduceHealth(damage); }
+            DestroySelf();
         }
 
         [Server]
