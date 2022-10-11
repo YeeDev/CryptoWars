@@ -4,6 +4,7 @@ using CryptoWars.Movement;
 using CryptoWars.Attacks;
 using CryptoWars.CustomPhysics;
 using CryptoWars.Core;
+using CryptoWars.Animations;
 
 namespace CryptoWars.Controls
 {
@@ -19,6 +20,7 @@ namespace CryptoWars.Controls
         bool grounded;
         Mover mover;
         Shooter shooter;
+        Animater animater;
         PhysicsApplier physicsApplier;
 
         public override void OnStartLocalPlayer()
@@ -26,6 +28,7 @@ namespace CryptoWars.Controls
             mover = GetComponent<Mover>();
             shooter = GetComponent<Shooter>();
             physicsApplier = GetComponent<PhysicsApplier>();
+            animater = GetComponent<Animater>();
 
             mover.SetPhysicsApplier = physicsApplier;
             Camera.main.GetComponentInParent<Follower>().SetCamera(transform, transform.GetChild(0), cannon);
@@ -47,6 +50,10 @@ namespace CryptoWars.Controls
         {
             mover.Move(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
             mover.Rotate(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+
+            bool isMoving = Mathf.Abs(Input.GetAxis("Vertical")) + Mathf.Abs(Input.GetAxis("Horizontal")) > Mathf.Epsilon;
+            bool isRotating = Mathf.Abs(Input.GetAxis("Mouse X")) + Mathf.Abs(Input.GetAxis("Mouse Y")) > Mathf.Epsilon;
+            animater.PlayWalkAnimation((isMoving || isRotating) && grounded);
         }
 
         private void ReadJumpInput()
@@ -64,6 +71,7 @@ namespace CryptoWars.Controls
             if (!isLocalPlayer) { return; }
 
             grounded = Physics.CheckSphere(groundChecker.position, checkerRadius, groundMask);
+            animater.SetGroundedParam(grounded);
 
             if (grounded) { mover.ResetHoveringTimer(); }
 
