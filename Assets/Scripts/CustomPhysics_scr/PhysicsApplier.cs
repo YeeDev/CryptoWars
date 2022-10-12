@@ -23,16 +23,18 @@ namespace CryptoWars.CustomPhysics
 
         public void ApplyGravity() { rb.AddForce(Vector3.up * gravityForce); }
 
-        public void CheckIfInvertGravity() //TODO handle this in animation Child objects
+        public void CheckIfInvertGravity(bool isInsideBG) //TODO handle this in animation Child objects
         {
-            if (transform.position.y > gravityThreshold && gravityForce < 0) { FlipZAxis(); }
-            else if (transform.position.y < gravityThreshold && gravityForce > 0) { FlipZAxis(); }
+            if (!isInsideBG) { return; }
+
+            if (transform.position.y > gravityThreshold && gravityForce < 0) { FlipZAxis(true); }
+            else if (transform.position.y < gravityThreshold && gravityForce > 0) { FlipZAxis(false); }
         }
 
-        public void FlipZAxis()
+        public void FlipZAxis(bool flip)
         {
-            gravityForce *= -1;
-            anm.FlipZAxis();
+            gravityForce = flip ? Mathf.Abs(gravityForce) : Mathf.Abs(gravityForce) * -1;
+            anm.FlipZAxis(flip);
         }
     }
 }

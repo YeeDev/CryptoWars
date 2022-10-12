@@ -21,6 +21,7 @@ namespace CryptoWars.Movement
         float vRotation;
         float hRotation;
         float currentFuel;
+        Vector3 spawnPosition;
         PhysicsApplier physics;
         UIUpdater uIUpdater;
 
@@ -34,7 +35,20 @@ namespace CryptoWars.Movement
             uIUpdater = FindObjectOfType<UIUpdater>();
 
             currentFuel = maxFuel;
+
+            spawnPosition = transform.position;
+            InitializeRotation();
         }
+
+        //Also Called in Controller
+        public void InitializeRotation()
+        {
+            Vector3 lookPosition = GameObject.FindGameObjectWithTag("Terrain").transform.position - transform.position;
+            vRotation = Quaternion.LookRotation(lookPosition, Vector3.up).eulerAngles.y;
+        }
+
+        //Called in Controller
+        public void ResetSpeed() => physics.RB.velocity = Vector3.zero;
 
         //Called in Controller
         public void Jump(bool haltJump = false)
@@ -98,5 +112,8 @@ namespace CryptoWars.Movement
             currentFuel = Mathf.Clamp(currentFuel + Time.deltaTime, 0, maxFuel);
             uIUpdater.UpdateFuelBar(currentFuel, maxFuel);
         }
+
+        //Called in Collisioner
+        public void MoveToSpawnPoint() => transform.position = spawnPosition;
     }
 }

@@ -17,7 +17,7 @@ namespace CryptoWars.Animations
 
         private void Awake() { anm = GetComponent<Animator>(); }
 
-        public void FlipZAxis() { anm.SetBool(flipZParameter, !anm.GetBool(flipZParameter)); }
+        public void FlipZAxis(bool flipped) { anm.SetBool(flipZParameter, flipped); }
 
         public void PlayWalkAnimation(bool isWalking)
         {

@@ -10,33 +10,38 @@ namespace CryptoWars.Controls
 {
     [RequireComponent(typeof(Mover))]
     [RequireComponent(typeof(Shooter))]
+    [RequireComponent(typeof(Animater))]
+    [RequireComponent(typeof(PhysicsApplier))]
+    [RequireComponent(typeof(Collisioner))]
     public class Controller : NetworkBehaviour
     {
         [SerializeField] Transform groundChecker = null;
         [SerializeField] float checkerRadius = 0.1f;
         [SerializeField] LayerMask groundMask = 0;
         [SerializeField] Transform cannon = null;
+        [SerializeField] 
 
         bool grounded;
-        Vector3 spawnPosition;
         Mover mover;
         Shooter shooter;
         Animater animater;
         PhysicsApplier physicsApplier;
+        Collisioner collisioner;
 
         public override void OnStartLocalPlayer()
         {
+            transform.LookAt(GameObject.FindGameObjectWithTag("Terrain").transform);
+
             mover = GetComponent<Mover>();
             shooter = GetComponent<Shooter>();
             physicsApplier = GetComponent<PhysicsApplier>();
             animater = GetComponent<Animater>();
+            collisioner = GetComponent<Collisioner>();
 
             mover.SetPhysicsApplier = physicsApplier;
             Camera.main.GetComponentInParent<Follower>().SetCamera(transform, transform.GetChild(0), cannon);
 
             Cursor.lockState = CursorLockMode.Locked;
-
-            spawnPosition = transform.position;
         }
 
         private void Update()
@@ -46,7 +51,19 @@ namespace CryptoWars.Controls
             ReadMoveInput();
             ReadJumpInput();
             ReadShootInput();
-            physicsApplier.CheckIfInvertGravity();
+            physicsApplier.CheckIfInvertGravity(collisioner.IsInsideBG);
+        }
+
+        private void FixedUpdate()
+        {
+            if (!isLocalPlayer) { return; }
+
+            grounded = Physics.CheckSphere(groundChecker.position, checkerRadius, groundMask);
+            animater.SetGroundedParam(grounded);
+
+            if (grounded) { mover.ResetHoveringTimer(); }
+
+            physicsApplier.ApplyGravity();
         }
 
         private void ReadMoveInput()
@@ -68,18 +85,6 @@ namespace CryptoWars.Controls
         }
 
         private void ReadShootInput() { if (Input.GetMouseButtonDown(0)) { shooter.CmdShoot(); } }
-
-        private void FixedUpdate()
-        {
-            if (!isLocalPlayer) { return; }
-
-            grounded = Physics.CheckSphere(groundChecker.position, checkerRadius, groundMask);
-            animater.SetGroundedParam(grounded);
-
-            if (grounded) { mover.ResetHoveringTimer(); }
-
-            physicsApplier.ApplyGravity();
-        }
 
         private void OnDrawGizmos()
         {
