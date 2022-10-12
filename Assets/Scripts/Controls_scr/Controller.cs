@@ -15,9 +15,10 @@ namespace CryptoWars.Controls
         [SerializeField] Transform groundChecker = null;
         [SerializeField] float checkerRadius = 0.1f;
         [SerializeField] LayerMask groundMask = 0;
-        [SerializeField] Transform cannon;
+        [SerializeField] Transform cannon = null;
 
         bool grounded;
+        Vector3 spawnPosition;
         Mover mover;
         Shooter shooter;
         Animater animater;
@@ -34,6 +35,8 @@ namespace CryptoWars.Controls
             Camera.main.GetComponentInParent<Follower>().SetCamera(transform, transform.GetChild(0), cannon);
 
             Cursor.lockState = CursorLockMode.Locked;
+
+            spawnPosition = transform.position;
         }
 
         private void Update()
