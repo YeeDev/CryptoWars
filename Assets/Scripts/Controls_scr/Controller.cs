@@ -5,6 +5,7 @@ using CryptoWars.Attacks;
 using CryptoWars.CustomPhysics;
 using CryptoWars.Core;
 using CryptoWars.Animations;
+using CryptoWars.Resources;
 
 namespace CryptoWars.Controls
 {
@@ -19,9 +20,9 @@ namespace CryptoWars.Controls
         [SerializeField] float checkerRadius = 0.1f;
         [SerializeField] LayerMask groundMask = 0;
         [SerializeField] Transform cannon = null;
-        [SerializeField] 
 
         bool grounded;
+        Stats stats;
         Mover mover;
         Shooter shooter;
         Animater animater;
@@ -37,6 +38,7 @@ namespace CryptoWars.Controls
             physicsApplier = GetComponent<PhysicsApplier>();
             animater = GetComponent<Animater>();
             collisioner = GetComponent<Collisioner>();
+            stats = GetComponent<Stats>();
 
             mover.SetPhysicsApplier = physicsApplier;
             Camera.main.GetComponentInParent<Follower>().SetCamera(transform, transform.GetChild(0), cannon);
@@ -61,7 +63,8 @@ namespace CryptoWars.Controls
             grounded = Physics.CheckSphere(groundChecker.position, checkerRadius, groundMask);
             animater.SetGroundedParam(grounded);
 
-            if (grounded) { mover.ResetHoveringTimer(); }
+            if (grounded) { stats.ModifyFuelStat(Time.deltaTime); }
+            if (grounded && mover.IsHovering) { mover.StopHovering(); }
 
             physicsApplier.ApplyGravity();
         }

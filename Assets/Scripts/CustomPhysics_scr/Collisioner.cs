@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using CryptoWars.Movement;
+using CryptoWars.Resources;
 using Mirror;
 
 namespace CryptoWars.CustomPhysics
@@ -9,8 +10,9 @@ namespace CryptoWars.CustomPhysics
     {
         [SerializeField] GameObject deathParticles = null;
 
-        Mover mover;
         bool isInsideBG;
+        Mover mover;
+        Stats stats;
         PhysicsApplier physicsApplier;
 
         public bool IsInsideBG { get => isInsideBG; }
@@ -18,6 +20,7 @@ namespace CryptoWars.CustomPhysics
         public override void OnStartLocalPlayer()
         {
             mover = GetComponent<Mover>();
+            stats = GetComponent<Stats>();
             physicsApplier = GetComponent<PhysicsApplier>();
         }
 
@@ -43,7 +46,7 @@ namespace CryptoWars.CustomPhysics
             physicsApplier.FlipZAxis(false);
             isInsideBG = false;
             mover.InitializeRotation();
-            mover.RestoreFuel();
+            stats.ModifyFuelStat(stats.MaxFuel);
         }
 
         [Command]

@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using CryptoWars.CustomPhysics;
 using CryptoWars.UI;
+using CryptoWars.Resources;
 
 namespace CryptoWars.Movement
 {
@@ -13,17 +14,14 @@ namespace CryptoWars.Movement
         [SerializeField] float jumpForce = 50f;
         [SerializeField] float rotateVSpeed = 1f;
         [SerializeField] float rotateHSpeed = 1f;
-        [Tooltip("1 fuel unit = 1 second.")]
-        [SerializeField] float maxFuel = 5f; //TODO Grab it from hardware piece Fuel
         [SerializeField] Transform cannon = null;
         
         bool isHovering;
         float vRotation;
         float hRotation;
-        float currentFuel;
         Vector3 spawnPosition;
+        Stats stats;
         PhysicsApplier physics;
-        UIUpdater uIUpdater;
 
         //Used in Controller
         public bool IsHovering { get => isHovering; }
@@ -32,10 +30,7 @@ namespace CryptoWars.Movement
 
         public override void OnStartLocalPlayer()
         {
-            uIUpdater = FindObjectOfType<UIUpdater>();
-
-            currentFuel = maxFuel;
-
+            stats = GetComponent<Stats>();
             spawnPosition = transform.position;
             InitializeRotation();
         }
@@ -85,15 +80,14 @@ namespace CryptoWars.Movement
         //Called in Controller
         public IEnumerator Hover()
         {
-            if (currentFuel <= Mathf.Epsilon) { yield break; }
+            if (stats.CurrentFuel <= Mathf.Epsilon) { yield break; }
 
             isHovering = true;
             physics.RB.constraints = RigidbodyConstraints.FreezeRotation ^ RigidbodyConstraints.FreezePositionY;
 
-            while (currentFuel > Mathf.Epsilon && isHovering)
+            while (stats.CurrentFuel > Mathf.Epsilon && isHovering)
             {
-                currentFuel -= Time.deltaTime;
-                uIUpdater.UpdateFuelBar(currentFuel, maxFuel);
+                stats.ModifyFuelStat(-Time.deltaTime);
 
                 yield return new WaitForEndOfFrame();
             }
@@ -104,21 +98,6 @@ namespace CryptoWars.Movement
 
         //Called in Controller
         public void StopHovering() { isHovering = false; }
-        //Called in Controller
-        public void ResetHoveringTimer()
-        {
-            if (isHovering) { return; }
-
-            currentFuel = Mathf.Clamp(currentFuel + Time.deltaTime, 0, maxFuel);
-            uIUpdater.UpdateFuelBar(currentFuel, maxFuel);
-        }
-
-        //Called in Collisioner
-        public void RestoreFuel()
-        {
-            currentFuel = maxFuel;
-            uIUpdater.UpdateFuelBar(currentFuel, maxFuel);
-        }
 
         //Called in Collisioner
         public void MoveToSpawnPoint() => transform.position = spawnPosition;

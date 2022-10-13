@@ -1019,6 +1019,7 @@ GameObject:
   - component: {fileID: 6181196937043242381}
   - component: {fileID: 6181196937043242388}
   - component: {fileID: 4001953968280115953}
+  - component: {fileID: 3690597853264587693}
   - component: {fileID: 6181196937043242371}
   - component: {fileID: 6181196937043242380}
   - component: {fileID: 7032606448462556592}
@@ -1121,7 +1122,6 @@ MonoBehaviour:
   jumpForce: 18
   rotateVSpeed: 5
   rotateHSpeed: 5
-  maxFuel: 5
   cannon: {fileID: 3770754125731330421}
 --- !u!114 &6181196937043242382
 MonoBehaviour:
@@ -1185,6 +1185,20 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   deathParticles: {fileID: 2252845949919911491, guid: 65a102f6c3bad4b11967d49cbdbd7f34, type: 3}
+--- !u!114 &3690597853264587693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6181196937043242390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56c148ecd2afe4557afd5a030e174be4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 0
+  maxFuel: 5
 --- !u!114 &6181196937043242371
 MonoBehaviour:
   m_ObjectHideFlags: 0
