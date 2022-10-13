@@ -8,13 +8,16 @@ namespace CryptoWars.UI
         [Tooltip("For debuggin purposes")]
         [SerializeField] int currency = 0;  //TODO refactor this to another script
         [SerializeField] Text currencyText = null;
+        [SerializeField] RectTransform healthBar = null;
         [SerializeField] RectTransform fuelBar = null;
 
+        float healthBarMaxXSize;
         float fuelBarMaxXSize;
 
         private void Awake()
         {
             fuelBarMaxXSize = fuelBar.sizeDelta.x;
+            healthBarMaxXSize = healthBar.sizeDelta.x;
             UpdateCurrency(0);
         }
 
@@ -29,6 +32,13 @@ namespace CryptoWars.UI
             Vector2 fuelBarSize = fuelBar.sizeDelta;
             fuelBarSize.x = (fuelRemaining * fuelBarMaxXSize) / maxFuel;
             fuelBar.sizeDelta = fuelBarSize;
+        }
+
+        public void UpdateHealthBar(float healthRemaining, float maxHealth)
+        {
+            Vector2 healthBarSize = healthBar.sizeDelta;
+            healthBarSize.x = (healthRemaining * healthBarMaxXSize) / maxHealth;
+            healthBar.sizeDelta = healthBarSize;
         }
     }
 }

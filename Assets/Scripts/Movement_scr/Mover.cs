@@ -15,7 +15,7 @@ namespace CryptoWars.Movement
         [SerializeField] float rotateVSpeed = 1f;
         [SerializeField] float rotateHSpeed = 1f;
         [SerializeField] Transform cannon = null;
-        
+
         bool isHovering;
         float vRotation;
         float hRotation;
@@ -43,16 +43,13 @@ namespace CryptoWars.Movement
         }
 
         //Called in Controller
-        public void ResetSpeed() => physics.RB.velocity = Vector3.zero;
-
-        //Called in Controller
         public void Jump(bool haltJump = false)
         {
             if (haltJump && (
                 (physics.RB.velocity.y > 0 && physics.GravityDirection < 0) ||
                 (physics.RB.velocity.y < 0 && physics.GravityDirection > 0)))
             { return; }
-             
+
             Vector3 jumpSpeed = physics.RB.velocity;
             jumpSpeed.y = haltJump ? jumpSpeed.y * 0.5f : (jumpSpeed.y + jumpForce) * physics.GravityDirection;
             physics.RB.velocity = jumpSpeed;
@@ -64,7 +61,7 @@ namespace CryptoWars.Movement
             Vector3 step = transform.forward * moveSpeed * xAxis;
             step += transform.right * moveSpeed * yAxis * physics.GravityDirection;
 
-            physics.RB.MovePosition(transform.position + step);
+            physics.RB.MovePosition(transform.position + step * Time.deltaTime);
         }
 
         //Called in Controller
@@ -100,6 +97,11 @@ namespace CryptoWars.Movement
         public void StopHovering() { isHovering = false; }
 
         //Called in Collisioner
-        public void MoveToSpawnPoint() => transform.position = spawnPosition;
+        public void MoveToSpawnPoint()
+        {
+            physics.RB.velocity = Vector3.zero;
+            transform.position = spawnPosition;
+            InitializeRotation();
+        }
     }
 }

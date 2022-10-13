@@ -1103,7 +1103,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   cannon: {fileID: 3770754125731330421}
-  grounded: 0
 --- !u!114 &6181196937043242377
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1118,7 +1117,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  moveSpeed: 0.2
+  moveSpeed: 8
   jumpForce: 18
   rotateVSpeed: 5
   rotateHSpeed: 5
@@ -1197,7 +1196,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56c148ecd2afe4557afd5a030e174be4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 0
+  maxHealth: 10
   maxFuel: 5
 --- !u!114 &6181196937043242371
 MonoBehaviour:

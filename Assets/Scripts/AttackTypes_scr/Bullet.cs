@@ -11,20 +11,22 @@ namespace CryptoWars.AttackTypes
         [SerializeField] Rigidbody rb = null;
         [SerializeField] GameObject explosionParticles = null;
 
-        private void Start()
-        {
-            rb.velocity = transform.forward * bulletspeed;
-        }
+        string playerThatShoot;
+        public string PlayerThatShoot { get => playerThatShoot; set => playerThatShoot = value; }
+
+        private void Start() { rb.velocity = transform.forward * bulletspeed; }
 
         [ServerCallback]
         private void OnTriggerEnter(Collider other)
         {
-            if (!other.CompareTag("Limit"))
-            {
-                GameObject particles = Instantiate(explosionParticles, transform.position, Quaternion.identity);
-                NetworkServer.Spawn(particles);
-            }
+            Debug.Log(other.transform.name);
+            Debug.Log(playerThatShoot);
+            if (other.transform.name.ToString() == playerThatShoot) { return; }
+
             if (other.CompareTag("Currency")) { other.GetComponent<CryptoFile>().ReduceHealth(damage); }
+
+            GameObject particles = Instantiate(explosionParticles, transform.position, Quaternion.identity);
+            NetworkServer.Spawn(particles);
             DestroySelf();
         }
 

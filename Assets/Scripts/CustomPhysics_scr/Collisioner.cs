@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using CryptoWars.Movement;
 using CryptoWars.Resources;
+using CryptoWars.AttackTypes;
 using Mirror;
 
 namespace CryptoWars.CustomPhysics
@@ -33,6 +34,12 @@ namespace CryptoWars.CustomPhysics
                 if (isInsideBG) { StartCoroutine(Respawn()); return; }
                 isInsideBG = true;
             }
+
+            if (other.CompareTag("Bullet"))
+            {
+                if (other.GetComponent<Bullet>().PlayerThatShoot == transform.name) { return; }
+                if (stats.TakeDamage() <= 0) { StartCoroutine(Respawn()); }
+            }
         }
 
         private IEnumerator Respawn()//TODO change to Coroutine
@@ -41,11 +48,9 @@ namespace CryptoWars.CustomPhysics
 
             yield return new WaitForSeconds(1.5f);
 
-            mover.ResetSpeed();
             mover.MoveToSpawnPoint();
             physicsApplier.FlipZAxis(false);
             isInsideBG = false;
-            mover.InitializeRotation();
             stats.ModifyFuelStat(stats.MaxFuel);
         }
 

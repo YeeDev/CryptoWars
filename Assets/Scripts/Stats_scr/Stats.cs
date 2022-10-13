@@ -1,16 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CryptoWars.Animations;
 using CryptoWars.UI;
 
 namespace CryptoWars.Resources
 {
     public class Stats : MonoBehaviour
     {
-        [SerializeField] float maxHealth;
+        [SerializeField] int maxHealth;
         [SerializeField] float maxFuel;
 
         float currentFuel;
+        int currentHealth;
+        Animater anm;
         UIUpdater uIUpdater;
 
         public float CurrentFuel { get => currentFuel; }
@@ -18,8 +21,10 @@ namespace CryptoWars.Resources
 
         private void Awake()
         {
+            anm = GetComponent<Animater>();
             uIUpdater = FindObjectOfType<UIUpdater>();
 
+            currentHealth = maxHealth;
             ModifyFuelStat(maxFuel);
         }
 
@@ -28,6 +33,22 @@ namespace CryptoWars.Resources
         {
             currentFuel = Mathf.Clamp(currentFuel + amount, 0, maxFuel);
             uIUpdater.UpdateFuelBar(currentFuel, maxFuel);
+        }
+
+        // Called in Collisioner
+        public int TakeDamage()
+        {
+            currentHealth--;
+            uIUpdater.UpdateHealthBar(currentHealth, maxHealth);
+
+            return currentHealth;
+        }
+
+        public void RestoreStats()
+        {
+            currentHealth = maxHealth;
+            uIUpdater.UpdateHealthBar(currentHealth, maxHealth);
+            ModifyFuelStat(maxFuel);
         }
     }
 }

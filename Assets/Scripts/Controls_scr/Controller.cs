@@ -40,6 +40,8 @@ namespace CryptoWars.Controls
             collisioner = GetComponent<Collisioner>();
             stats = GetComponent<Stats>();
 
+            transform.GetChild(0).name = transform.name;
+
             mover.SetPhysicsApplier = physicsApplier;
             Camera.main.GetComponentInParent<Follower>().SetCamera(transform, transform.GetChild(0), cannon);
 

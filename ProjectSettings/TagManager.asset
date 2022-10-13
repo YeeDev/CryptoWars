@@ -7,6 +7,7 @@ TagManager:
   - Currency
   - Terrain
   - Limit
+  - Bullet
   layers:
   - Default
   - TransparentFX

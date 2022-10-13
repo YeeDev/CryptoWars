@@ -1,5 +1,6 @@
 using Mirror;
 using UnityEngine;
+using CryptoWars.AttackTypes;
 
 namespace CryptoWars.Attacks
 {
@@ -8,12 +9,12 @@ namespace CryptoWars.Attacks
         [SerializeField] GameObject bulletPrefab = null;
         [SerializeField] Transform muzzle = null;
 
-        //TODO BulletPooler
-        //Needs to create a list of weapons bullets based on type
+        //TODO BulletPooler (Perhaps later)
         [Command]
         public void CmdShoot()
         {
             GameObject bullet = Instantiate(bulletPrefab, muzzle.position, muzzle.rotation);
+            bullet.GetComponent<Bullet>().PlayerThatShoot = transform.name;
             NetworkServer.Spawn(bullet.gameObject);
         }
     }
