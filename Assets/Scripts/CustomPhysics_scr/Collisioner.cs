@@ -1,8 +1,8 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using CryptoWars.Movement;
 using CryptoWars.Resources;
-using CryptoWars.AttackTypes;
 using Mirror;
 
 namespace CryptoWars.CustomPhysics
@@ -16,6 +16,8 @@ namespace CryptoWars.CustomPhysics
         Stats stats;
         PhysicsApplier physicsApplier;
 
+        List<MeshRenderer> meshes = new List<MeshRenderer>();
+
         public bool IsInsideBG { get => isInsideBG; }
 
         public override void OnStartLocalPlayer()
@@ -23,6 +25,13 @@ namespace CryptoWars.CustomPhysics
             mover = GetComponent<Mover>();
             stats = GetComponent<Stats>();
             physicsApplier = GetComponent<PhysicsApplier>();
+
+            foreach (Transform child in transform)
+            {
+                MeshRenderer meshRenderer = child.GetComponent<MeshRenderer>();
+
+                if (meshRenderer != null) { meshes.Add(meshRenderer); }
+            }
         }
 
         private void OnTriggerEnter(Collider other)
@@ -35,11 +44,7 @@ namespace CryptoWars.CustomPhysics
                 isInsideBG = true;
             }
 
-            if (other.CompareTag("Bullet"))
-            {
-                if (other.GetComponent<Bullet>().PlayerThatShoot == transform.name) { return; }
-                if (stats.TakeDamage() <= 0) { StartCoroutine(Respawn()); }
-            }
+            if (other.CompareTag("Bullet")) { if (stats.TakeDamage() <= 0) StartCoroutine(Respawn()); }
         }
 
         private IEnumerator Respawn()//TODO change to Coroutine

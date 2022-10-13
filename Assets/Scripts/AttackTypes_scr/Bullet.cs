@@ -11,9 +11,7 @@ namespace CryptoWars.AttackTypes
         [SerializeField] Rigidbody rb = null;
         [SerializeField] GameObject explosionParticles = null;
 
-        string playerThatShoot;
         Collider col;
-        public string PlayerThatShoot { get => playerThatShoot; set => playerThatShoot = value; }
 
         private void Start()
         {

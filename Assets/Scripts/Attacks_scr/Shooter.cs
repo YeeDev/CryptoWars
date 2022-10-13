@@ -1,6 +1,5 @@
 using Mirror;
 using UnityEngine;
-using CryptoWars.AttackTypes;
 
 namespace CryptoWars.Attacks
 {
@@ -8,12 +7,14 @@ namespace CryptoWars.Attacks
     {
         [SerializeField] GameObject bulletPrefab = null;
         [SerializeField] Transform muzzle = null;
+        [SerializeField] AudioSource audioSource = null;
 
         //TODO BulletPooler (Perhaps later)
         [Command]
         public void CmdShoot()
         {
             GameObject bullet = Instantiate(bulletPrefab, muzzle.position, muzzle.rotation);
+            audioSource.Play();
             NetworkServer.Spawn(bullet.gameObject);
         }
     }

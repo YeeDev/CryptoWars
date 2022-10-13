@@ -1,6 +1,7 @@
 using UnityEngine;
 using CryptoWars.UI;
 using Mirror;
+using CryptoWars.Resources;
 
 namespace CryptoWars.Currency
 {
@@ -14,7 +15,6 @@ namespace CryptoWars.Currency
 
         float health;
         float moveDirectionThreshold;
-        UIUpdater uIUpdater;
         Material material;
 
         [SyncVar(hook = nameof(SetColor))] Color damageColor = Color.black;
@@ -23,14 +23,12 @@ namespace CryptoWars.Currency
 
         private void Awake()
         {
-            uIUpdater = FindObjectOfType<UIUpdater>();
             moveDirectionThreshold = GameObject.FindGameObjectWithTag("Terrain").transform.position.y;
             material = GetComponent<MeshRenderer>().material;
 
             health = maxHealth;
         }
 
-        //TODO Refactor this, POSSNewName TakeDamage
         public void ReduceHealth(int damage)
         {
             health -= damage;
@@ -42,7 +40,6 @@ namespace CryptoWars.Currency
 
             if (health <= 0)
             {
-                uIUpdater.UpdateCurrency(currencyValue);
                 Destroy(gameObject);
             }
         }

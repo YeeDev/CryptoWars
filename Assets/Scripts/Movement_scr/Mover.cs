@@ -93,6 +93,9 @@ namespace CryptoWars.Movement
             isHovering = false;
         }
 
+        public void FreezeRigibody() => physics.RB.constraints = RigidbodyConstraints.FreezeAll;
+        public void UnfreezeRigidbody() => physics.RB.constraints = RigidbodyConstraints.FreezeRotation;
+
         //Called in Controller
         public void StopHovering() { isHovering = false; }
 

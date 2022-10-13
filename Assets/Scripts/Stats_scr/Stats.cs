@@ -8,8 +8,9 @@ namespace CryptoWars.Resources
 {
     public class Stats : MonoBehaviour
     {
-        [SerializeField] int maxHealth;
-        [SerializeField] float maxFuel;
+        [SerializeField] int maxHealth = 0;
+        [SerializeField] float maxFuel = 0;
+        [SerializeField] int currency = 0;
 
         float currentFuel;
         int currentHealth;
@@ -45,11 +46,19 @@ namespace CryptoWars.Resources
             return currentHealth;
         }
 
+        // Called in Collisioner
         public void RestoreStats()
         {
             currentHealth = maxHealth;
             uIUpdater.UpdateHealthBar(currentHealth, maxHealth);
             ModifyFuelStat(maxFuel);
+        }
+
+        // Called in CryptoFile
+        public void AddCurrency(int amountToAdd)
+        {
+            currency += amountToAdd;
+            uIUpdater.UpdateCurrency(currency);
         }
     }
 }
