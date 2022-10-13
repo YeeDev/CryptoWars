@@ -10,6 +10,7 @@ namespace CryptoWars.CustomPhysics
     public class Collisioner : NetworkBehaviour
     {
         [SerializeField] GameObject deathParticles = null;
+        [SerializeField] float respawnTime = 5f;
 
         bool isInsideBG;
         Mover mover;
@@ -26,12 +27,8 @@ namespace CryptoWars.CustomPhysics
             stats = GetComponent<Stats>();
             physicsApplier = GetComponent<PhysicsApplier>();
 
-            foreach (Transform child in transform)
-            {
-                MeshRenderer meshRenderer = child.GetComponent<MeshRenderer>();
-
-                if (meshRenderer != null) { meshes.Add(meshRenderer); }
-            }
+            foreach (MeshRenderer mesh in GetComponentsInChildren<MeshRenderer>()) { meshes.Add(mesh); }
+            Debug.Log(meshes.Count);
         }
 
         private void OnTriggerEnter(Collider other)
@@ -50,13 +47,18 @@ namespace CryptoWars.CustomPhysics
         private IEnumerator Respawn()//TODO change to Coroutine
         {
             CMDSpawnDeathParticles();
+            mover.FreezeRigibody();
 
-            yield return new WaitForSeconds(1.5f);
+            foreach (MeshRenderer mesh in meshes) { mesh.enabled = false; }
+
+            yield return new WaitForSeconds(respawnTime);
 
             mover.MoveToSpawnPoint();
+            mover.UnfreezeRigidbody();
             physicsApplier.FlipZAxis(false);
             isInsideBG = false;
             stats.RestoreStats();
+            foreach (MeshRenderer mesh in meshes) { mesh.enabled = true; }
         }
 
         [Command]
