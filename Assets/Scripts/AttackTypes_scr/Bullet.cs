@@ -12,17 +12,21 @@ namespace CryptoWars.AttackTypes
         [SerializeField] GameObject explosionParticles = null;
 
         string playerThatShoot;
+        Collider col;
         public string PlayerThatShoot { get => playerThatShoot; set => playerThatShoot = value; }
 
-        private void Start() { rb.velocity = transform.forward * bulletspeed; }
+        private void Start()
+        {
+            rb.velocity = transform.forward * bulletspeed;
+            col = GetComponent<Collider>();
+            Invoke("StartCollider", 0.1f);
+        }
+
+        private void StartCollider() => col.enabled = true;
 
         [ServerCallback]
         private void OnTriggerEnter(Collider other)
         {
-            Debug.Log(other.transform.name);
-            Debug.Log(playerThatShoot);
-            if (other.transform.name.ToString() == playerThatShoot) { return; }
-
             if (other.CompareTag("Currency")) { other.GetComponent<CryptoFile>().ReduceHealth(damage); }
 
             GameObject particles = Instantiate(explosionParticles, transform.position, Quaternion.identity);

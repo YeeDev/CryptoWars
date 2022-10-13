@@ -40,6 +40,7 @@ namespace CryptoWars.Resources
         {
             currentHealth--;
             uIUpdater.UpdateHealthBar(currentHealth, maxHealth);
+            anm.PlayTakeDamageAnimation();
 
             return currentHealth;
         }

@@ -7,6 +7,7 @@ namespace CryptoWars.Animations
         [SerializeField] string flipZParameter = "IsGravityUpwards";
         [SerializeField] string groundedParameter = "IsGrounded";
         [SerializeField] string floatParameter = "TriggerFloat";
+        [SerializeField] string takeDamageParameter = "TakeDamage";
 
         [Header("Walk Animation Settings")]
         [SerializeField] float walkSpeed = 1f;
@@ -18,6 +19,8 @@ namespace CryptoWars.Animations
         private void Awake() { anm = GetComponent<Animator>(); }
 
         public void FlipZAxis(bool flipped) { anm.SetBool(flipZParameter, flipped); }
+
+        public void PlayTakeDamageAnimation() { anm.SetTrigger(takeDamageParameter); }
 
         public void PlayWalkAnimation(bool isWalking)
         {

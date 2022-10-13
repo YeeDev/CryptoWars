@@ -51,7 +51,7 @@ namespace CryptoWars.CustomPhysics
             mover.MoveToSpawnPoint();
             physicsApplier.FlipZAxis(false);
             isInsideBG = false;
-            stats.ModifyFuelStat(stats.MaxFuel);
+            stats.RestoreStats();
         }
 
         [Command]

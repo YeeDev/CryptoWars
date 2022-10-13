@@ -14,7 +14,6 @@ namespace CryptoWars.Attacks
         public void CmdShoot()
         {
             GameObject bullet = Instantiate(bulletPrefab, muzzle.position, muzzle.rotation);
-            bullet.GetComponent<Bullet>().PlayerThatShoot = transform.name;
             NetworkServer.Spawn(bullet.gameObject);
         }
     }
