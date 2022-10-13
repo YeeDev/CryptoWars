@@ -114,6 +114,13 @@ namespace CryptoWars.Movement
         }
 
         //Called in Collisioner
+        public void RestoreFuel()
+        {
+            currentFuel = maxFuel;
+            uIUpdater.UpdateFuelBar(currentFuel, maxFuel);
+        }
+
+        //Called in Collisioner
         public void MoveToSpawnPoint() => transform.position = spawnPosition;
     }
 }

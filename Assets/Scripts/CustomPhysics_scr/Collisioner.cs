@@ -43,6 +43,7 @@ namespace CryptoWars.CustomPhysics
             physicsApplier.FlipZAxis(false);
             isInsideBG = false;
             mover.InitializeRotation();
+            mover.RestoreFuel();
         }
 
         [Command]
