@@ -8,11 +8,14 @@ namespace CryptoWars.Currency
     public class CryptoFile : NetworkBehaviour
     {
         [SerializeField] int maxHealth = 5;
+        [SerializeField] int value = 5;
         [SerializeField] float heightChange = 0.5f;
         [SerializeField] Color initialColor = Color.blue;
         [SerializeField] Color finalColor = Color.red;
+        [SerializeField] Collider col = null;
 
         float moveDirectionThreshold;
+        UIUpdater uIUpdater;
         Material material;
 
         [SyncVar] int health;
@@ -26,11 +29,13 @@ namespace CryptoWars.Currency
         {
             moveDirectionThreshold = GameObject.FindGameObjectWithTag("Terrain").transform.position.y;
             material = GetComponent<MeshRenderer>().material;
+            uIUpdater = FindObjectOfType<UIUpdater>();
 
             health = maxHealth;
         }
 
-        public void CmdReduceHealth(int damage, Stats player)
+        [Server]
+        public void ReduceHealth(int damage, GameObject playerID)
         {
             health -= damage;
             Vector3 loweredPosition = transform.position;
@@ -38,11 +43,17 @@ namespace CryptoWars.Currency
             transform.position = loweredPosition;
             damageColor = Color.Lerp(finalColor, initialColor, health / maxHealth);
 
-            if(health <= 0)
+            if (health <= 0)
             {
-                player.AddCurrency(5);
-                Destroy(gameObject);
+                RpcCallUpdateUI(playerID);
+                Color transparent = Color.white;
+                transparent.a = 0;
+                damageColor = transparent;
+                col.enabled = false;
             }
         }
+
+        [ClientRpc]
+        private void RpcCallUpdateUI(GameObject playerID) => playerID.GetComponent<Stats>().AddCurrency(value, playerID);
     }
 }

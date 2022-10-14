@@ -54,10 +54,13 @@ namespace CryptoWars.Resources
         }
 
         // Called in Bullet
-        public void AddCurrency(int amountToAdd)
+        public void AddCurrency(int amountToAdd, GameObject playerID)
         {
-            currency += amountToAdd;
-            uIUpdater.UpdateCurrency(currency);
+            if (playerID.GetComponent<NetworkIdentity>().isLocalPlayer)
+            {
+                currency += amountToAdd;
+                uIUpdater.UpdateCurrency(currency);
+            }
         }
     }
 }

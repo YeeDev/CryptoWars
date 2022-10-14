@@ -1,9 +1,10 @@
 using UnityEngine;
 using UnityEngine.UI;
+using Mirror;
 
 namespace CryptoWars.UI
 {
-    public class UIUpdater : MonoBehaviour
+    public class UIUpdater : NetworkBehaviour
     {
         [SerializeField] Text currencyText = null;
         [SerializeField] RectTransform healthBar = null;
@@ -19,7 +20,10 @@ namespace CryptoWars.UI
             UpdateCurrency(0);
         }
 
-        public void UpdateCurrency(int currencyToAdd) => currencyText.text = $"Currency: {currencyToAdd}";
+        public void UpdateCurrency(int currencyToAdd)
+        {
+            currencyText.text = $"Currency: {currencyToAdd}";
+        }
 
         public void UpdateFuelBar(float fuelRemaining, float maxFuel)
         {

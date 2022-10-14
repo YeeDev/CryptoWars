@@ -93,7 +93,7 @@ namespace CryptoWars.Controls
             else if (Input.GetKeyUp(KeyCode.Space) && !mover.IsHovering) { mover.Jump(true); }
         }
 
-        private void ReadShootInput() { if (Input.GetMouseButtonDown(0)) { shooter.CmdShoot(isServer); } }
+        private void ReadShootInput() { if (Input.GetMouseButtonDown(0)) { shooter.CmdShoot(gameObject); } }
 
         private void OnDrawGizmos()
         {

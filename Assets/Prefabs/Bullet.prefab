@@ -145,6 +145,7 @@ GameObject:
   - component: {fileID: 522249296609927615}
   - component: {fileID: 8641097673750616256}
   - component: {fileID: -2953582154876297677}
+  - component: {fileID: 8744725004749354595}
   m_Layer: 0
   m_Name: Bullet
   m_TagString: Bullet
@@ -264,3 +265,20 @@ MonoBehaviour:
   bulletspeed: 40
   rb: {fileID: 8641097673750616256}
   explosionParticles: {fileID: 7660681338379946902, guid: 06382525d61774daea2f4eb433c0439c, type: 3}
+--- !u!114 &8744725004749354595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 522249296609927612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  serverOnly: 0
+  visible: 0
+  m_AssetId: 68c865187d8e0446786db6f0d0a875d7
+  hasSpawned: 0
