@@ -1,10 +1,11 @@
 using Mirror;
 using UnityEngine;
 using CryptoWars.Currency;
+using CryptoWars.Resources;
 
 namespace CryptoWars.AttackTypes
 {
-    public class Bullet : NetworkBehaviour
+    public class Bullet : MonoBehaviour
     {
         [SerializeField] int damage = 1;
         [SerializeField] float bulletspeed = 40f;
@@ -12,6 +13,9 @@ namespace CryptoWars.AttackTypes
         [SerializeField] GameObject explosionParticles = null;
 
         Collider col;
+        Stats playerStats;
+
+        public Stats SetTransform { set => playerStats = value; }
 
         private void Start()
         {
@@ -22,17 +26,16 @@ namespace CryptoWars.AttackTypes
 
         private void StartCollider() => col.enabled = true;
 
-        [ServerCallback]
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Currency")) { other.GetComponent<CryptoFile>().ReduceHealth(damage); }
+            if (other.CompareTag("Currency"))
+            {
+                CryptoFile file = other.GetComponent<CryptoFile>();
+                file.CmdReduceHealth(damage, playerStats);
+            }
 
-            GameObject particles = Instantiate(explosionParticles, transform.position, Quaternion.identity);
-            NetworkServer.Spawn(particles);
-            DestroySelf();
+            Instantiate(explosionParticles, transform.position, Quaternion.identity);
+            Destroy(gameObject);
         }
-
-        [Server]
-        void DestroySelf() => NetworkServer.Destroy(gameObject);
     }
 }

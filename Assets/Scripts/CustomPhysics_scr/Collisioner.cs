@@ -13,6 +13,7 @@ namespace CryptoWars.CustomPhysics
         [SerializeField] float respawnTime = 5f;
 
         bool isInsideBG;
+        bool respawning;
         Mover mover;
         Stats stats;
         PhysicsApplier physicsApplier;
@@ -28,7 +29,6 @@ namespace CryptoWars.CustomPhysics
             physicsApplier = GetComponent<PhysicsApplier>();
 
             foreach (MeshRenderer mesh in GetComponentsInChildren<MeshRenderer>()) { meshes.Add(mesh); }
-            Debug.Log(meshes.Count);
         }
 
         private void OnTriggerEnter(Collider other)
@@ -46,6 +46,10 @@ namespace CryptoWars.CustomPhysics
 
         private IEnumerator Respawn()//TODO change to Coroutine
         {
+            if (respawning) { yield break; }
+
+            respawning = true;
+
             CMDSpawnDeathParticles();
             mover.FreezeRigibody();
 
@@ -59,6 +63,8 @@ namespace CryptoWars.CustomPhysics
             isInsideBG = false;
             stats.RestoreStats();
             foreach (MeshRenderer mesh in meshes) { mesh.enabled = true; }
+
+            respawning = false;
         }
 
         [Command]

@@ -1,19 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 using CryptoWars.Animations;
 using CryptoWars.UI;
 
 namespace CryptoWars.Resources
 {
-    public class Stats : MonoBehaviour
+    public class Stats : NetworkBehaviour
     {
         [SerializeField] int maxHealth = 0;
         [SerializeField] float maxFuel = 0;
-        [SerializeField] int currency = 0;
 
-        float currentFuel;
+        int currency;
         int currentHealth;
+        float currentFuel;
         Animater anm;
         UIUpdater uIUpdater;
 
@@ -54,7 +53,7 @@ namespace CryptoWars.Resources
             ModifyFuelStat(maxFuel);
         }
 
-        // Called in CryptoFile
+        // Called in Bullet
         public void AddCurrency(int amountToAdd)
         {
             currency += amountToAdd;

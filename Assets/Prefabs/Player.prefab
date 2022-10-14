@@ -1138,6 +1138,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   bulletPrefab: {fileID: 522249296609927612, guid: 68c865187d8e0446786db6f0d0a875d7, type: 3}
+  bulletDummyPrefab: {fileID: 522249296609927612, guid: 006ea6904c6544668b6efb5b007e2c97, type: 3}
   muzzle: {fileID: 3302595684861927512}
   audioSource: {fileID: 8860224364467193368}
 --- !u!114 &6181196937043242381
@@ -1187,6 +1188,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   deathParticles: {fileID: 2252845949919911491, guid: 65a102f6c3bad4b11967d49cbdbd7f34, type: 3}
+  respawnTime: 5
 --- !u!114 &3690597853264587693
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1199,9 +1201,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56c148ecd2afe4557afd5a030e174be4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   maxHealth: 10
   maxFuel: 5
-  currency: 0
 --- !u!114 &6181196937043242371
 MonoBehaviour:
   m_ObjectHideFlags: 0

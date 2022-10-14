@@ -144,9 +144,9 @@ GameObject:
   - component: {fileID: 522249296609927614}
   - component: {fileID: 522249296609927615}
   - component: {fileID: 8641097673750616256}
-  - component: {fileID: -2953582154876297677}
+  - component: {fileID: -7243026499262883218}
   m_Layer: 0
-  m_Name: Bullet
+  m_Name: BulletDummy
   m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -248,7 +248,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!114 &-2953582154876297677
+--- !u!114 &-7243026499262883218
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -257,10 +257,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 522249296609927612}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2bb6f767566ae481280b37a7ab64e8c4, type: 3}
+  m_Script: {fileID: 11500000, guid: b570c0956bfbb4be0a6bba5d577bd1cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 1
   bulletspeed: 40
   rb: {fileID: 8641097673750616256}
   explosionParticles: {fileID: 7660681338379946902, guid: 06382525d61774daea2f4eb433c0439c, type: 3}

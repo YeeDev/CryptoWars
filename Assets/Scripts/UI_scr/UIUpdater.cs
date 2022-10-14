@@ -5,8 +5,6 @@ namespace CryptoWars.UI
 {
     public class UIUpdater : MonoBehaviour
     {
-        [Tooltip("For debuggin purposes")]
-        [SerializeField] int currency = 0;  //TODO refactor this to another script
         [SerializeField] Text currencyText = null;
         [SerializeField] RectTransform healthBar = null;
         [SerializeField] RectTransform fuelBar = null;
@@ -21,11 +19,7 @@ namespace CryptoWars.UI
             UpdateCurrency(0);
         }
 
-        public void UpdateCurrency(int currencyToAdd)
-        {
-            currency += currencyToAdd;
-            currencyText.text = $"Currency: {currency}";
-        }
+        public void UpdateCurrency(int currencyToAdd) => currencyText.text = $"Currency: {currencyToAdd}";
 
         public void UpdateFuelBar(float fuelRemaining, float maxFuel)
         {

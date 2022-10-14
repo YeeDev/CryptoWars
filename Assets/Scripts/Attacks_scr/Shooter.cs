@@ -1,21 +1,36 @@
 using Mirror;
 using UnityEngine;
+using CryptoWars.AttackTypes;
+using CryptoWars.Resources;
 
 namespace CryptoWars.Attacks
 {
     public class Shooter : NetworkBehaviour
     {
         [SerializeField] GameObject bulletPrefab = null;
+        [SerializeField] GameObject bulletDummyPrefab = null;
         [SerializeField] Transform muzzle = null;
         [SerializeField] AudioSource audioSource = null;
 
-        //TODO BulletPooler (Perhaps later)
         [Command]
-        public void CmdShoot()
+        public void CmdShoot(bool comesFromServer)
         {
-            GameObject bullet = Instantiate(bulletPrefab, muzzle.position, muzzle.rotation);
+            GameObject typeOfBullet = comesFromServer ? bulletPrefab : bulletDummyPrefab;
+            CreateBullet(typeOfBullet);
+            RpcCreateBullet();
             audioSource.Play();
-            NetworkServer.Spawn(bullet.gameObject);
+        }
+
+        private void CreateBullet(GameObject typeOfPrefab)
+        {
+            GameObject bullet = Instantiate(typeOfPrefab, muzzle.position, muzzle.rotation);
+            if (typeOfPrefab != bulletDummyPrefab) { bullet.GetComponent<Bullet>().SetTransform = GetComponent<Stats>(); }
+        }
+
+        [ClientRpc]
+        private void RpcCreateBullet()
+        {
+            if (!isServer) { CreateBullet(bulletPrefab); }
         }
     }
 }

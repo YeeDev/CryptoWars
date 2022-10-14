@@ -28,6 +28,7 @@ namespace CryptoWars.Controls
         Animater animater;
         PhysicsApplier physicsApplier;
         Collisioner collisioner;
+        CurrencyDataHolder dataHolder;
 
         public override void OnStartLocalPlayer()
         {
@@ -46,6 +47,9 @@ namespace CryptoWars.Controls
             Camera.main.GetComponentInParent<Follower>().SetCamera(transform, transform.GetChild(0), cannon);
 
             Cursor.lockState = CursorLockMode.Locked;
+
+            dataHolder = GameObject.FindGameObjectWithTag("Currency Manager").GetComponent<CurrencyDataHolder>();
+            dataHolder.RegisterPlayer();
         }
 
         private void Update()
@@ -89,7 +93,7 @@ namespace CryptoWars.Controls
             else if (Input.GetKeyUp(KeyCode.Space) && !mover.IsHovering) { mover.Jump(true); }
         }
 
-        private void ReadShootInput() { if (Input.GetMouseButtonDown(0)) { shooter.CmdShoot(); } }
+        private void ReadShootInput() { if (Input.GetMouseButtonDown(0)) { shooter.CmdShoot(isServer); } }
 
         private void OnDrawGizmos()
         {
